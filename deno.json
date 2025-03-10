@@ -1,0 +1,31 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net --allow-read --allow-env main.js",
+    "build": "deno compile --output dist/app --allow-net --allow-read --allow-env main.js",
+    "deploy": "deployctl deploy --project=college-advisor --prod main.js"
+  },
+  "importMap": "import_map.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.window"]
+  },
+  "lint": {
+    "files": {
+      "include": ["**/*.js"]
+    },
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "include": ["**/*.js"]
+    },
+    "options": {
+      "useTabs": false,
+      "lineWidth": 80,
+      "indentWidth": 2,
+      "singleQuote": false
+    }
+  }
+}
