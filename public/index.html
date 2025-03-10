@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能高考志愿填报助手</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <header class="bg-primary text-white text-center py-4">
+    <h1>智能高考志愿填报助手</h1>
+    <p class="lead">基于AI技术，为您提供精准的志愿填报建议</p>
+  </header>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="#recommend-section" class="list-group-item list-group-item-action active" id="nav-recommend">智能推荐</a>
+          <a href="#university-section" class="list-group-item list-group-item-action" id="nav-university">院校查询</a>
+          <a href="#score-section" class="list-group-item list-group-item-action" id="nav-score">分数线查询</a>
+          <a href="#risk-section" class="list-group-item list-group-item-action" id="nav-risk">风险评估</a>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <!-- 智能推荐部分 -->
+        <div id="recommend-section" class="content-section active">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3>智能志愿推荐</h3>
+            </div>
+            <div class="card-body">
+              <form id="recommend-form">
+                <div class="mb-3">
+                  <label for="score" class="form-label">高考分数</label>
+                  <input type="number" class="form-control" id="score" required>
+                </div>
+                <div class="mb-3">
+                  <label for="province" class="form-label">所在省份</label>
+                  <select class="form-control" id="province" required>
+                    <option value="">请选择省份</option>
+                    <option value="北京">北京</option>
+                    <option value="上海">上海</option>
+                    <option value="天津">天津</option>
+                    <option value="重庆">重庆</option>
+                    <option value="河北">河北</option>
+                    <option value="山西">山西</option>
+                    <option value="辽宁">辽宁</option>
+                    <option value="吉林">吉林</option>
+                    <option value="黑龙江">黑龙江</option>
+                    <option value="江苏">江苏</option>
+                    <option value="浙江">浙江</option>
+                    <option value="安徽">安徽</option>
+                    <option value="福建">福建</option>
+                    <option value="江西">江西</option>
+                    <option value="山东">山东</option>
+                    <option value="河南">河南</option>
+                    <option value="湖北">湖北</option>
+                    <option value="湖南">湖南</option>
+                    <option value="广东">广东</option>
+                    <option value="海南">海南</option>
+                    <option value="四川">四川</option>
+                    <option value="贵州">贵州</option>
+                    <option value="云南">云南</option>
+                    <option value="陕西">陕西</option>
+                    <option value="甘肃">甘肃</option>
+                    <option value="青海">青海</option>
+                    <option value="内蒙古">内蒙古</option>
+                    <option value="广西">广西</option>
+                    <option value="西藏">西藏</option>
+                    <option value="宁夏">宁夏</option>
+                    <option value="新疆">新疆</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="interests" class="form-label">兴趣爱好（多个用逗号分隔）</label>
+                  <input type="text" class="form-control" id="interests" placeholder="例如：计算机,数学,文学">
+                </div>
+                <button type="submit" class="btn btn-primary">获取推荐</button>
+              </form>
+              <div id="recommend-result" class="mt-4 d-none">
+                <h4>推荐结果</h4>
+                <div class="spinner-border text-primary d-none" id="recommend-loading" role="status">
+                  <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="recommend-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 院校查询部分 -->
+        <div id="university-section" class="content-section d-none">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3>院校信息查询</h3>
+            </div>
+            <div class="card-body">
+              <form id="university-form">
+                <div class="mb-3">
+                  <label for="university-name" class="form-label">大学名称</label>
+                  <input type="text" class="form-control" id="university-name" placeholder="例如：北京大学" required>
+                </div>
+                <button type="submit" class="btn btn-primary">查询</button>
+              </form>
+              <div id="university-result" class="mt-4 d-none">
+                <h4>查询结果</h4>
+                <div class="spinner-border text-primary d-none" id="university-loading" role="status">
+                  <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="university-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 分数线查询部分 -->
+        <div id="score-section" class="content-section d-none">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3>分数线查询</h3>
+            </div>
+            <div class="card-body">
+              <form id="score-form">
+                <div class="mb-3">
+                  <label for="score-university" class="form-label">大学名称</label>
+                  <input type="text" class="form-control" id="score-university" placeholder="例如：清华大学" required>
+                </div>
+                <div class="mb-3">
+                  <label for="score-province" class="form-label">省份</label>
+                  <select class="form-control" id="score-province" required>
+                    <option value="">请选择省份</option>
+                    <option value="北京">北京</option>
+                    <option value="上海">上海</option>
+                    <option value="天津">天津</option>
+                    <option value="重庆">重庆</option>
+                    <option value="河北">河北</option>
+                    <option value="山西">山西</option>
+                    <option value="辽宁">辽宁</option>
+                    <option value="吉林">吉林</option>
+                    <option value="黑龙江">黑龙江</option>
+                    <option value="江苏">江苏</option>
+                    <option value="浙江">浙江</option>
+                    <option value="安徽">安徽</option>
+                    <option value="福建">福建</option>
+                    <option value="江西">江西</option>
+                    <option value="山东">山东</option>
+                    <option value="河南">河南</option>
+                    <option value="湖北">湖北</option>
+                    <option value="湖南">湖南</option>
+                    <option value="广东">广东</option>
+                    <option value="海南">海南</option>
+                    <option value="四川">四川</option>
+                    <option value="贵州">贵州</option>
+                    <option value="云南">云南</option>
+                    <option value="陕西">陕西</option>
+                    <option value="甘肃">甘肃</option>
+                    <option value="青海">青海</option>
+                    <option value="内蒙古">内蒙古</option>
+                    <option value="广西">广西</option>
+                    <option value="西藏">西藏</option>
+                    <option value="宁夏">宁夏</option>
+                    <option value="新疆">新疆</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="score-year" class="form-label">年份（可选）</label>
+                  <input type="number" class="form-control" id="score-year" placeholder="例如：2023">
+                </div>
+                <button type="submit" class="btn btn-primary">查询</button>
+              </form>
+              <div id="score-result" class="mt-4 d-none">
+                <h4>查询结果</h4>
+                <div class="spinner-border text-primary d-none" id="score-loading" role="status">
+                  <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="score-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 风险评估部分 -->
+        <div id="risk-section" class="content-section d-none">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3>志愿风险评估</h3>
+            </div>
+            <div class="card-body">
+              <form id="risk-form">
+                <div class="mb-3">
+                  <label for="risk-score" class="form-label">高考分数</label>
+                  <input type="number" class="form-control" id="risk-score" required>
+                </div>
+                <div class="mb-3">
+                  <label for="risk-province" class="form-label">所在省份</label>
+                  <select class="form-control" id="risk-province" required>
+                    <option value="">请选择省份</option>
+                    <option value="北京">北京</option>
+                    <option value="上海">上海</option>
+                    <option value="天津">天津</option>
+                    <option value="重庆">重庆</option>
+                    <option value="河北">河北</option>
+                    <option value="山西">山西</option>
+                    <option value="辽宁">辽宁</option>
+                    <option value="吉林">吉林</option>
+                    <option value="黑龙江">黑龙江</option>
+                    <option value="江苏">江苏</option>
+                    <option value="浙江">浙江</option>
+                    <option value="安徽">安徽</option>
+                    <option value="福建">福建</option>
+                    <option value="江西">江西</option>
+                    <option value="山东">山东</option>
+                    <option value="河南">河南</option>
+                    <option value="湖北">湖北</option>
+                    <option value="湖南">湖南</option>
+                    <option value="广东">广东</option>
+                    <option value="海南">海南</option>
+                    <option value="四川">四川</option>
+                    <option value="贵州">贵州</option>
+                    <option value="云南">云南</option>
+                    <option value="陕西">陕西</option>
+                    <option value="甘肃">甘肃</option>
+                    <option value="青海">青海</option>
+                    <option value="内蒙古">内蒙古</option>
+                    <option value="广西">广西</option>
+                    <option value="西藏">西藏</option>
+                    <option value="宁夏">宁夏</option>
+                    <option value="新疆">新疆</option>
+                  </select>
+                </div>
+                <div id="choices-container">
+                  <div class="mb-3">
+                    <h5>志愿选择</h5>
+                    <div class="choice-item mb-2">
+                      <div class="row">
+                        <div class="col-md-5">
+                          <input type="text" class="form-control choice-university" placeholder="大学名称" required>
+                        </div>
+                        <div class="col-md-5">
+                          <input type="text" class="form-control choice-major" placeholder="专业名称" required>
+                        </div>
+                        <div class="col-md-2">
+                          <button type="button" class="btn btn-danger remove-choice">删除</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-secondary mb-3" id="add-choice">添加志愿</button>
+                </div>
+                <button type="submit" class="btn btn-primary">评估风险</button>
+              </form>
+              <div id="risk-result" class="mt-4 d-none">
+                <h4>评估结果</h4>
+                <div class="spinner-border text-primary d-none" id="risk-loading" role="status">
+                  <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="risk-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
