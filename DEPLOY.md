@@ -53,17 +53,35 @@ deployctl login
 
 ### 2. 创建新项目
 
-在Deno Deploy控制台(https://dash.deno.com/projects)创建一个新项目，例如"college-advisor"。
+在Deno Deploy控制台创建一个新项目：
 
-### 3. 部署应用
+1. 访问 https://dash.deno.com/projects
+2. 点击'New Project'按钮
+3. 选择'Empty Project'选项
+4. 输入项目名称，例如"college-advisor"
+5. 点击'Create'按钮完成创建
+
+### 3. 更新项目配置
+
+在部署前，需要更新deno.json文件中的项目名称：
+
+```bash
+# 手动编辑deno.json文件，将deploy任务中的项目名称改为您创建的项目名称
+# 或使用deploy.js脚本自动更新
+deno run --allow-run --allow-read --allow-write --allow-env --allow-net deploy.js
+```
+
+### 4. 部署应用
 
 ```bash
 # 使用deno任务部署
 deno task deploy
 
 # 或直接使用deployctl部署
-deployctl deploy --project=college-advisor --prod main.js
+deployctl deploy --project=your-project-name --prod main.ts
 ```
+
+注意：请将`your-project-name`替换为您在Deno Deploy创建的实际项目名称。
 
 ### 4. 配置环境变量
 

@@ -2,7 +2,7 @@
   "tasks": {
     "start": "deno run --allow-net --allow-read --allow-env main.ts",
     "build": "deno compile --output dist/app --allow-net --allow-read --allow-env main.ts",
-    "deploy": "deployctl deploy --project=miaoge-gaobao-78 --prod main.ts",
+    "deploy": "deployctl deploy --project=your-project-name --prod main.ts",
     "build:vuepress": "npm run docs:build",
     "deploy:all": "deno run --allow-run --allow-read --allow-write --allow-env --allow-net deploy.js"
   },

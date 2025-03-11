@@ -108,6 +108,41 @@ deno task start
 3. 确认Deno服务是否正确处理静态文件请求
 4. 检查VuePress构建输出是否完整
 
+### 权限问题解决方案
+
+如果遇到以下错误：
+```
+Error: APIError: The authorization token is not valid: You don't have permission to access the project 'xxx'. Please ensure your workflow file references the correct project
+```
+
+请按照以下步骤解决：
+
+1. **确保已登录Deno Deploy**
+   ```bash
+   deployctl login
+   ```
+
+2. **在Deno Deploy控制台创建新项目**
+   - 访问 https://dash.deno.com/projects
+   - 点击'New Project'按钮
+   - 选择'Empty Project'选项
+   - 创建一个新项目
+
+3. **更新项目配置**
+   - 修改deno.json文件中的项目名称为您创建的项目名称
+   ```json
+   "deploy": "deployctl deploy --project=your-project-name --prod main.ts"
+   ```
+   - 或使用deploy.js脚本自动更新项目名称
+   ```bash
+   deno run --allow-run --allow-read --allow-write --allow-env --allow-net deploy.js
+   ```
+
+4. **重新部署应用**
+   ```bash
+   deno task deploy
+   ```
+
 ## 相关资源
 
 - [VuePress文档](https://vuepress.vuejs.org/)
