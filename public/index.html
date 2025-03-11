@@ -21,6 +21,7 @@
           <a href="#university-section" class="list-group-item list-group-item-action" id="nav-university">院校查询</a>
           <a href="#score-section" class="list-group-item list-group-item-action" id="nav-score">分数线查询</a>
           <a href="#risk-section" class="list-group-item list-group-item-action" id="nav-risk">风险评估</a>
+          <a href="#rank-section" class="list-group-item list-group-item-action" id="nav-rank">位次查询</a>
         </div>
       </div>
 
@@ -258,6 +259,72 @@
                   <span class="visually-hidden">加载中...</span>
                 </div>
                 <div id="risk-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 位次查询部分 -->
+        <div id="rank-section" class="content-section d-none">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h3>高考位次查询</h3>
+            </div>
+            <div class="card-body">
+              <form id="rank-form">
+                <div class="mb-3">
+                  <label for="rank-score" class="form-label">高考分数</label>
+                  <input type="number" class="form-control" id="rank-score" required>
+                </div>
+                <div class="mb-3">
+                  <label for="rank-province" class="form-label">所在省份</label>
+                  <select class="form-control" id="rank-province" required>
+                    <option value="">请选择省份</option>
+                    <option value="北京">北京</option>
+                    <option value="上海">上海</option>
+                    <option value="天津">天津</option>
+                    <option value="重庆">重庆</option>
+                    <option value="河北">河北</option>
+                    <option value="山西">山西</option>
+                    <option value="辽宁">辽宁</option>
+                    <option value="吉林">吉林</option>
+                    <option value="黑龙江">黑龙江</option>
+                    <option value="江苏">江苏</option>
+                    <option value="浙江">浙江</option>
+                    <option value="安徽">安徽</option>
+                    <option value="福建">福建</option>
+                    <option value="江西">江西</option>
+                    <option value="山东">山东</option>
+                    <option value="河南">河南</option>
+                    <option value="湖北">湖北</option>
+                    <option value="湖南">湖南</option>
+                    <option value="广东">广东</option>
+                    <option value="海南">海南</option>
+                    <option value="四川">四川</option>
+                    <option value="贵州">贵州</option>
+                    <option value="云南">云南</option>
+                    <option value="陕西">陕西</option>
+                    <option value="甘肃">甘肃</option>
+                    <option value="青海">青海</option>
+                    <option value="内蒙古">内蒙古</option>
+                    <option value="广西">广西</option>
+                    <option value="西藏">西藏</option>
+                    <option value="宁夏">宁夏</option>
+                    <option value="新疆">新疆</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="rank-year" class="form-label">年份（可选）</label>
+                  <input type="number" class="form-control" id="rank-year" placeholder="例如：2023">
+                </div>
+                <button type="submit" class="btn btn-primary">查询位次</button>
+              </form>
+              <div id="rank-result" class="mt-4 d-none">
+                <h4>查询结果</h4>
+                <div class="spinner-border text-primary d-none" id="rank-loading" role="status">
+                  <span class="visually-hidden">加载中...</span>
+                </div>
+                <div id="rank-content"></div>
               </div>
             </div>
           </div>

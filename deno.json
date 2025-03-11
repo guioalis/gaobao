@@ -2,7 +2,9 @@
   "tasks": {
     "start": "deno run --allow-net --allow-read --allow-env main.js",
     "build": "deno compile --output dist/app --allow-net --allow-read --allow-env main.js",
-    "deploy": "deployctl deploy --project=college-advisor --prod main.js"
+    "deploy": "deployctl deploy --project=college-advisor --prod main.js",
+    "build:vuepress": "npm run docs:build",
+    "deploy:all": "deno run --allow-run --allow-read --allow-write --allow-env --allow-net deploy.js"
   },
   "importMap": "import_map.json",
   "compilerOptions": {

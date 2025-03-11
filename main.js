@@ -7,9 +7,9 @@ import { aiService } from "./services/ai_service.js";
 
 // 配置信息
 const PORT = Deno.env.get("PORT") || 8000;
-const API_KEY = "123321";
-const API_URL = "https://dangbeichaohua.deno.dev/v1";
-const MODEL = "deepseek-r1";
+const API_KEY = Deno.env.get("API_KEY") || "123321"; // 生产环境应从环境变量获取
+const API_URL = Deno.env.get("API_URL") || "https://dangbeichaohua.deno.dev/v1";
+const MODEL = Deno.env.get("MODEL") || "deepseek-r1";
 
 // 处理请求的主函数
 async function handleRequest(req) {
@@ -156,6 +156,40 @@ async function handleRequest(req) {
     } catch (error) {
       console.error("风险评估时出错:", error);
       return new Response(JSON.stringify({ error: "风险评估时出错" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  // 高考位次查询
+  if (pathname === "/api/rank-info") {
+    if (req.method !== "POST") {
+      return new Response(JSON.stringify({ error: "只支持POST请求" }), {
+        status: 405,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    try {
+      const requestData = await req.json();
+      const { score, province, year } = requestData;
+      
+      const rankInfo = await aiService.getRankInfo(
+        score,
+        province,
+        year,
+        API_URL,
+        API_KEY,
+        MODEL
+      );
+      
+      return new Response(JSON.stringify({ rankInfo }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("获取位次信息时出错:", error);
+      return new Response(JSON.stringify({ error: "获取位次信息时出错" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });

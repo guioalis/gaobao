@@ -101,6 +101,20 @@ function setupFormSubmissions() {
       await submitRiskForm(score, province, choices);
     });
   }
+  
+  // 位次查询表单
+  const rankForm = document.getElementById('rank-form');
+  if (rankForm) {
+    rankForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const score = document.getElementById('rank-score').value;
+      const province = document.getElementById('rank-province').value;
+      const year = document.getElementById('rank-year').value;
+      
+      await submitRankForm(score, province, year);
+    });
+  }
 }
 
 /**
@@ -556,6 +570,153 @@ function displayRiskAssessment(assessment, container) {
   } else if (assessment.raw_content) {
     // 处理原始内容
     html = `<div class="alert alert-info">${assessment.raw_content}</div>`;
+  } else {
+    html = '<div class="alert alert-warning">返回的数据格式不正确</div>';
+  }
+  
+  container.innerHTML = html;
+}
+
+/**
+ * 提交位次查询表单
+ * @param {number} score - 考生分数
+ * @param {string} province - 省份
+ * @param {string} year - 年份（可选）
+ */
+async function submitRankForm(score, province, year) {
+  const resultContainer = document.getElementById('rank-result');
+  const loadingSpinner = document.getElementById('rank-loading');
+  const contentDiv = document.getElementById('rank-content');
+  
+  // 显示结果区域和加载动画
+  resultContainer.classList.remove('d-none');
+  loadingSpinner.classList.remove('d-none');
+  contentDiv.innerHTML = '';
+  
+  try {
+    const response = await fetch('/api/rank-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ score, province, year })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      displayRankInfo(data.rankInfo, contentDiv);
+    } else {
+      displayError(data.error || '获取位次信息失败', contentDiv);
+    }
+  } catch (error) {
+    displayError('请求出错: ' + error.message, contentDiv);
+  } finally {
+    loadingSpinner.classList.add('d-none');
+  }
+}
+
+/**
+ * 显示位次查询结果
+ * @param {object} rankInfo - 位次信息数据
+ * @param {HTMLElement} container - 显示容器
+ */
+function displayRankInfo(rankInfo, container) {
+  if (!rankInfo) {
+    container.innerHTML = '<div class="alert alert-info">没有找到位次信息</div>';
+    return;
+  }
+  
+  let html = '';
+  
+  if (rankInfo.score) {
+    html = `
+      <div class="rank-info">
+        <div class="alert alert-primary">
+          <h5>基本信息</h5>
+          <p><strong>分数:</strong> ${rankInfo.score}分</p>
+          <p><strong>省份:</strong> ${rankInfo.province}</p>
+          <p><strong>年份:</strong> ${rankInfo.year}</p>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">位次信息</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>预估排名:</strong> ${rankInfo.rank}</p>
+            <p><strong>百分位:</strong> ${rankInfo.percentile}</p>
+            <p><strong>可考虑的大学层次:</strong> ${rankInfo.university_level}</p>
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">可冲刺院校</h5>
+          </div>
+          <div class="card-body">
+            ${Array.isArray(rankInfo.reach_schools) ? 
+              rankInfo.reach_schools.map(school => `<p>${school.name}: ${school.min_score}分</p>`).join('') : 
+              '<p>暂无数据</p>'
+            }
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">稳妥院校</h5>
+          </div>
+          <div class="card-body">
+            ${Array.isArray(rankInfo.match_schools) ? 
+              rankInfo.match_schools.map(school => `<p>${school.name}: ${school.min_score}分</p>`).join('') : 
+              '<p>暂无数据</p>'
+            }
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">保底院校</h5>
+          </div>
+          <div class="card-body">
+            ${Array.isArray(rankInfo.safety_schools) ? 
+              rankInfo.safety_schools.map(school => `<p>${school.name}: ${school.min_score}分</p>`).join('') : 
+              '<p>暂无数据</p>'
+            }
+          </div>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">考生走向分析</h5>
+          </div>
+          <div class="card-body">
+            <p>${rankInfo.analysis || '暂无分析'}</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">填报建议</h5>
+          </div>
+          <div class="card-body">
+            ${Array.isArray(rankInfo.suggestions) ? 
+              `<ul>${rankInfo.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}</ul>` : 
+              '<p>暂无建议</p>'
+            }
+          </div>
+          </div>
+          <div class="card-body">
+            <ul class="list-group">
+              ${Array.isArray(rankInfo.suggestions) ? rankInfo.suggestions.map(suggestion => `<li class="list-group-item">${suggestion}</li>`).join('') : '<li class="list-group-item">暂无建议</li>'}
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (rankInfo.raw_content) {
+    // 处理原始内容
+    html = `<div class="alert alert-info">${rankInfo.raw_content}</div>`;
   } else {
     html = '<div class="alert alert-warning">返回的数据格式不正确</div>';
   }

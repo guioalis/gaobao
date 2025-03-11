@@ -165,6 +165,55 @@ export const aiService = {
   },
 
   /**
+   * 获取高考位次信息
+   * @param {number} score - 考生分数
+   * @param {string} province - 省份
+   * @param {string|null} year - 年份，可选
+   * @param {string} apiUrl - API地址
+   * @param {string} apiKey - API密钥
+   * @param {string} model - 使用的模型
+   * @returns {Promise<object>} - 位次信息
+   */
+  async getRankInfo(score, province, year, apiUrl, apiKey, model) {
+    const yearText = year ? `${year}年` : '今年';
+    const prompt = `
+      我是一名来自${province}的高考考生，我的分数是${score}分。
+      请根据我的分数，提供${yearText}在${province}的高考位次信息，包括：
+      1. 大致排名和位次
+      2. 在全省的百分位
+      3. 可以考虑的大学层次
+      4. 历年同分段考生的走向分析
+      5. 可冲刺院校、稳妥院校和保底院校推荐
+      
+      请按照以下JSON格式返回结果：
+      {
+        "score": ${score},
+        "province": "${province}",
+        "year": "${yearText}",
+        "rank": "预估排名",
+        "percentile": "百分位",
+        "university_level": "可考虑的大学层次",
+        "analysis": "同分段考生走向分析",
+        "reach_schools": [
+          {"name": "大学名称", "min_score": "最低分数"},
+          ...
+        ],
+        "match_schools": [
+          {"name": "大学名称", "min_score": "最低分数"},
+          ...
+        ],
+        "safety_schools": [
+          {"name": "大学名称", "min_score": "最低分数"},
+          ...
+        ],
+        "suggestions": ["建议1", "建议2", ...]
+      }
+    `;
+
+    return await this._callAI(prompt, apiUrl, apiKey, model);
+  },
+
+  /**
    * 调用AI API的通用方法
    * @param {string} prompt - 提示词
    * @param {string} apiUrl - API地址
